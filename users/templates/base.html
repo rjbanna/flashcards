@@ -1,0 +1,16 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %}</title>
+		{% include 'common/headers.html' %}
+		{% include 'common/navbar.html' %}
+	</head>
+	<body>
+		<div class = 'container-fluid'>
+			{% block content %}{% endblock %}		
+		</div>
+		{% include 'common/footer.html' %}
+	</body>
+</html>

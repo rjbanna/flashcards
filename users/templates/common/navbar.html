@@ -1,0 +1,46 @@
+<!-- MOBILE NAVBAR BUTTON -->
+{% load staticfiles %}
+
+<!-- MOBILE NAVBAR BUTTON STOP -->
+
+<header class="site-navbar" role="banner" style="background-color: #fff; box-shadow: 0px 3px 10px #bfbfbf;">
+  <div class="container">
+    <div class="row align-items-center position-relative">
+      <div class="site-logo">
+        <a href="{% url 'homepage' %}" class="text-black">
+          <span class="text-primary">Flashyy</span>
+        </a>
+      </div>
+
+      <nav class="site-navigation text-center ml-auto" role="navigation">
+        <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
+          {% if 'email' not in request.session %}
+            <li class="nav-item">
+              <a href="{% url 'signin' %}" class="nav-link" {% if request.resolver_match.url_name == 'signin' %} style="color: #fd5f00 !important;" {% endif %} >Login</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'signup' %}" class="nav-link" {% if request.resolver_match.url_name == 'signup' %} style="color: #fd5f00 !important;" {% endif %} >Register</a>
+            </li>
+          {% endif %}
+
+          {% if 'email' in request.session %}
+            <li class="nav-item">
+              <a href="{% url 'dashboard' %}" class="nav-link" {% if request.resolver_match.url_name == 'dashboard' %} style="color: #fd5f00 !important;" {% endif %} >Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'signout' %}" {% if request.resolver_match.url_name == 'signout' %} style="color: #fd5f00 !important;" {% endif %} >Logout</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+
+      <div class="toggle-button d-inline-block d-lg-none">
+        <a href="#" class="site-menu-toggle py-5 js-menu-toggle text-black">
+          <span class="icon-menu h3"></span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</header>
+</div>
