@@ -1,2 +1,3 @@
 staticfiles/* linguist-documentation
 users/static/* linguist-documentation
+users/templates/* linguist-documentation
