@@ -7,6 +7,7 @@ class User(models.Model):
 	password = models.CharField(max_length = 30)
 	is_active = models.IntegerField(blank = True, null = True)
 	activation_code = models.CharField(max_length = 20, blank = True, null = True)
+	password_reset_code = models.CharField(max_length = 20, blank = True, null = True)
 
 	class Meta:
 		verbose_name = 'User'

@@ -25,3 +25,11 @@ class ResetPasswordForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields = ('email',)
+
+
+class VerifyPasswordResetCode(forms.Form):
+	code = forms.CharField(max_length = 6, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Unique Code'} ))
+
+
+class NewPassword(forms.Form):
+	password = forms.CharField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'New Password'} ))

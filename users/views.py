@@ -2,8 +2,12 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from users.forms import *
 from django.contrib import messages
+from django.core.mail import send_mail
 import uuid
 from django.conf import settings
+from random import randint
+from django.urls import reverse
+
 
 # Create your views here.
 
@@ -32,8 +36,9 @@ def signup(request):
 			if form.is_valid():
 				user = form.save(commit = False)
 				user.save()
-				return redirect('dashboard')
+				activation_mail(request, email)
 		else:
+			messages.error(request, "Solve errors")
 			return render(request, template_name = 'signup.html', context = { 'form': form })
 
 	else:
@@ -41,42 +46,44 @@ def signup(request):
 
 	return render(request, template_name = 'signup.html', context = { 'form': form })
 
-def resetpass(request):
-	if 'email' in request.session:
-		return redirect('dashboard')
+def activation_mail(request, email):
+	try:
+		unique_id = unique_code(6)
+		email_active_url = request.META['HTTP_HOST'] + reverse('account_active') + '?q=' + str(unique_id)
 
-	if request.method == 'POST':
-		form = ResetPasswordForm(request.POST)
+		user_data = User.objects.get(email = email)
+		user_data.activation_code = unique_id
+		user_data.save()
 
-		email = request.POST['email']
-		check_email = User.objects.filter(email = email)
+		subject = "Welcome to Flashyy"
+		message = 'Please click on this link to activate your account \n' + email_active_url
+		from_email = settings.EMAIL_HOST_USER
+		to_list = [email]
+		
+		send_mail(subject, message, from_email, to_list, fail_silently = False)
+		messages.success(request, 'Account activation mail sent')
+		return redirect('signin')		
+	except:
+		return False
 
-		if check_email:
-			try:
-				unique_id = uuid.uuid1()
-				user_data = User.objects.get(email = email)
-				user_data.activation_code = unique_id
-				user_data.save()
-				subject = "So sad!"
-				message = 'Here\'s the secret code to reset your password \n' + str(unique_id)
-				from_email = settings.EMAIL_HOST_USER
-				to_list = [email]
-				send_mail(subject, message, from_email, to_list, fail_silently = False)
-			except:
-				return False
-				
-			return redirect('signin')
-		else:
-			message.error(request, 'Email is not registered' )
-			return redirect('resetpass')
-	else:
-		form = ResetPasswordForm()
+def account_active(request):
+    try:
+        unique_id = request.GET['q']
+        customer_data = User.objects.filter(activation_code = unique_id)
 
-	return render(request, template_name = 'signup.html', context = { 'form': form })
+        if(customer_data.count() > 0):
+            messages.success(request, 'Your account has been activated please Log in below')
+            customer_data = User.objects.get(activation_code = unique_id)
+            customer_data.activation_code = ''
+            customer_data.is_active = 1
+            customer_data.save()
 
-
-def verify_email(request):
-	pass
+            return redirect('signin')
+        else:
+            messages.error(request, 'Invalid URL')
+            return redirect('signin')
+    except:
+        return redirect('signin')
 # ---------------------------------------- BEFORE LOGIN FUNCTIONS STOP ---------------------------------------- #
 
 
@@ -102,8 +109,15 @@ def signin(request):
 
 		if check_user:
 			if form.is_valid():
-				request.session['email'] = email
-				return redirect('dashboard')
+				user_data = User.objects.get(email = email)
+
+				if user_data.is_active:
+					request.session['email'] = email
+					return redirect('dashboard')
+				else:
+					request.session['send_again_mail'] = email
+					messages.info(request, 'Please activate your account to continue login')
+					return render(request, template_name = 'signin.html', context = {'form': form, 'send_mail': 1})
 		else:
 			messages.error(request, 'Please check your email / password')
 			return redirect('signin')
@@ -119,3 +133,138 @@ def signout(request):
 	request.session.flush()
 	return redirect('homepage')
 # ---------------------------------------- AFTER LOGIN FUNCTIONS STOP ---------------------------------------- #
+
+
+
+# ---------------------------------------- PASSWORD RELATED FUNCTIONS START ---------------------------------------- #
+def resetpass(request):
+	if 'email' in request.session:
+		return redirect('dashboard')
+
+	if request.method == 'POST':
+		form = ResetPasswordForm(request.POST)
+
+		if form.is_valid():
+			email = request.POST['email']
+			check_email = User.objects.filter(email = email)
+
+			if check_email:
+				# unique_id = uuid.uuid1()
+				unique_id = unique_code(6)
+				user_data = User.objects.get(email = email)
+				user_data.password_reset_code = unique_id
+				user_data.save()
+
+				subject = "So sad!"
+				message = 'Here\'s the secret code to reset your password \n' + str(unique_id)
+				from_email = settings.EMAIL_HOST_USER
+				to_list = [email]
+				
+				send_mail(subject, message, from_email, to_list, fail_silently = False)			
+				
+				request.session['temp_mail'] = email
+
+				return redirect('resetpassverify')
+			else:
+				messages.error(request, 'Email is not registered' )
+				return redirect('resetpass')
+		else:
+			messages.error(request, 'Error occured' )
+			return redirect('resetpass')
+	else:
+		form = ResetPasswordForm()
+
+	return render(request, template_name = 'password/resetpassword.html', context = { 'form': form })
+
+def verify(request):
+	if 'email' in request.session:
+		return redirect('dashboard')
+
+	if 'temp_mail' not in request.session:
+		return redirect('homepage')
+
+	if request.method == 'POST':
+		email = request.session['temp_mail']
+		code = request.POST['code']
+
+		form = VerifyPasswordResetCode(request.POST)
+
+		if form.is_valid():
+			user_account = User.objects.filter(email = email)
+
+			if user_account:			
+				user_data = User.objects.get(email = email)
+
+				if user_data.password_reset_code == code:
+					user_data.password_reset_code = ''
+					user_data.save()
+					request.session['is_verified'] = 1
+					return redirect('newpassword')
+				else:
+					messages.error(request, 'Wrong unique code')
+				
+				return redirect('resetpassverify')
+			else:
+				messages.error(request, 'Wrong unique code')
+				return redirect('resetpassverify')
+		else:
+			return redirect('resetpassverify')
+
+	else:
+		form = VerifyPasswordResetCode()
+
+	return render(request, template_name = 'password/verifycode.html', context = {'form': form})
+
+def newpassword(request):
+	if 'email' in request.session:
+		return redirect('dashboard')
+
+	if 'temp_mail' not in request.session:
+		return redirect('homepage')
+
+	if 'is_verified' not in request.session:
+		return redirect('homepage')
+
+	if request.method == 'POST':
+		email = request.session['temp_mail']
+		password = request.POST['password']
+
+		form = NewPassword(request.POST)
+
+		if form.is_valid():
+			user_account = User.objects.filter(email = email)
+
+			if user_account:
+				user_data = User.objects.get(email = email)
+				user_data.password = password
+				user_data.save()
+
+				del request.session['temp_mail']
+				del request.session['is_verified']
+
+				messages.success(request, 'Password changed successfully')
+				return redirect('signin')
+			else:
+				messages.error(request, 'Error occured')
+				return redirect('newpassword')
+		else:
+			return redirect('newpassword')
+
+	else:
+		form = NewPassword()
+
+	return render(request, template_name = 'password/newpassword.html', context = {'form': form})
+
+def unique_code(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+# ---------------------------------------- PASSWORD RELATED FUNCTIONS STOP ---------------------------------------- #
+
+
+
+def send_activation_mail_again(request):
+	email = request.session['send_again_mail']
+	activation_mail(request, email)
+	del request.session['send_again_mail']
+	return redirect('signin')
