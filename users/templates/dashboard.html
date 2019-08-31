@@ -7,5 +7,24 @@
 {% endblock %}
 
 {% block content %}
-	demo
+	<h3>Decks</h3>
+
+	{% if not is_created %}
+		<p>No decks added</p>
+	{% else %}
+		<div class="container-fluid top-space">
+	  		<div class="row mt-5">
+	  			{% for deck in decks %}
+	  			<a href= '{% url "deck_detail" slug=deck.slug %}'>
+			    	<div class="card card-custom mx-2 mb-3">
+				      <div class="card-body">
+				        {{ deck.name }}
+				      </div>
+				    </div>
+				</a>
+			    {% endfor %}
+			</div>
+		</div>
+	{% endif %}
+
 {% endblock %}

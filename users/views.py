@@ -8,13 +8,16 @@ from django.conf import settings
 from random import randint
 from django.urls import reverse
 
+from carddecks.models import *
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
-
 def homepage(request):
 	return redirect('signin')
 
-# ---------------------------------------- BEFORE LOGIN FUNCTIONS START ---------------------------------------- #
+
+
+# ---------------------------------------- BEFORE LOGIN FUNCTIONS START --------------------------------------- #
 def signup(request):
 	if 'email' in request.session:
 		return redirect('dashboard')
@@ -93,7 +96,18 @@ def dashboard(request):
 	if 'email' not in request.session:
 		return redirect('signin')
 
-	return render(request, template_name = 'dashboard.html', context = { 'form': 'aa' })
+	email = request.session['email']
+	user_decks_check = Deck.objects.filter(user__email = email)
+
+	is_created = 0
+	get_user_decks = []
+	if user_decks_check:
+		for d in user_decks_check:
+			get_user_decks.append(d)
+
+		is_created = 1
+
+	return render(request, template_name = 'dashboard.html', context = { 'is_created': is_created, 'decks': get_user_decks })
 
 def signin(request):
 	if 'email' in request.session:
@@ -132,11 +146,11 @@ def signout(request):
 
 	request.session.flush()
 	return redirect('homepage')
-# ---------------------------------------- AFTER LOGIN FUNCTIONS STOP ---------------------------------------- #
+# ---------------------------------------- AFTER LOGIN FUNCTIONS STOP ----------------------------------------- #
 
 
 
-# ---------------------------------------- PASSWORD RELATED FUNCTIONS START ---------------------------------------- #
+# -------------------------------------- PASSWORD RELATED FUNCTIONS START ------------------------------------- #
 def resetpass(request):
 	if 'email' in request.session:
 		return redirect('dashboard')
@@ -259,12 +273,23 @@ def unique_code(n):
     range_start = 10**(n-1)
     range_end = (10**n)-1
     return randint(range_start, range_end)
-# ---------------------------------------- PASSWORD RELATED FUNCTIONS STOP ---------------------------------------- #
+# --------------------------------------- PASSWORD RELATED FUNCTIONS STOP ------------------------------------- #
 
 
 
+# ------------------------------------------------ OTHERS START ----------------------------------------------- #
 def send_activation_mail_again(request):
 	email = request.session['send_again_mail']
 	activation_mail(request, email)
 	del request.session['send_again_mail']
 	return redirect('signin')
+# ------------------------------------------------ OTHERS STOP ------------------------------------------------ #
+
+
+
+def deck_detail(request, slug = True):
+	if 'email' not in request.session:
+		return redirect('signin')
+
+	deck = get_object_or_404(Deck, slug = slug)
+	return render(request, template_name = 'carddecks/deck_details.html', context = {'deck': deck})
