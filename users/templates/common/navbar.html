@@ -4,7 +4,7 @@
 <!-- MOBILE NAVBAR BUTTON STOP -->
 
 <header class="site-navbar" role="banner" style="background-color: #fff; box-shadow: 0px 3px 10px #bfbfbf;">
-  <div class="container">
+  <div class="container-fluid">
     <div class="row align-items-center position-relative">
       <div class="site-logo">
         <a href="{% url 'homepage' %}" class="text-black">
@@ -26,6 +26,9 @@
           {% if 'email' in request.session %}
             <li class="nav-item">
               <a href="{% url 'dashboard' %}" class="nav-link" {% if request.resolver_match.url_name == 'dashboard' %} style="color: #fd5f00 !important;" {% endif %} >Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'deck_add' %}" class="nav-link" {% if request.resolver_match.url_name == 'deck_add' %} style="color: #fd5f00 !important;" {% endif %} >Add Deck</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'signout' %}" {% if request.resolver_match.url_name == 'signout' %} style="color: #fd5f00 !important;" {% endif %} >Logout</a>

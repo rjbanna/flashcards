@@ -4,10 +4,9 @@ from django.utils.text import slugify
 
 # Create your models here.
 class Deck(models.Model):
-	user = models.ForeignKey(User, db_column='email', on_delete = models.CASCADE, default = '')
+	user = models.CharField(max_length = 30)
 	name = models.CharField(max_length = 30)
-	slug = models.SlugField(unique=True, blank=True, null=True)
-
+	slug = models.SlugField(unique = True, blank = True, null = True)
 
 	def save(self, *args, **kwargs):
 		self.slug = slugify(self.name)
@@ -22,8 +21,8 @@ class Deck(models.Model):
 
 
 class Card(models.Model):
-	user = models.ForeignKey(User, on_delete = models.CASCADE, default = '')
-	deck_name = models.ForeignKey(Deck, on_delete = models.CASCADE)
+	user = models.CharField(max_length = 30)
+	deck_name = models.CharField(max_length = 30)
 	front = models.TextField(max_length = 100)
 	back = models.TextField(max_length = 100)
 

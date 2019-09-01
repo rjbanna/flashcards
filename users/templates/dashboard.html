@@ -12,19 +12,18 @@
 	{% if not is_created %}
 		<p>No decks added</p>
 	{% else %}
-		<div class="container-fluid top-space">
-	  		<div class="row mt-5">
-	  			{% for deck in decks %}
-	  			<a href= '{% url "deck_detail" slug=deck.slug %}'>
-			    	<div class="card card-custom mx-2 mb-3">
-				      <div class="card-body">
-				        {{ deck.name }}
-				      </div>
-				    </div>
-				</a>
-			    {% endfor %}
-			</div>
-		</div>
+		<table class="table top-space">
+		  	<tbody>
+		  		{% for deck in decks %}
+			    	<tr>
+			      		<td>{{ forloop.counter }}</td>
+			      		<td class = 'col-md-5'>{{ deck.name }}</td>
+			      		<td class = 'col-md-2'><a href="{% url 'deck_detail' slug=deck.slug %}" class="btn btn-primary">Learn</a></td>
+			      		<td><a href="{% url 'deck_delete' slug=deck.slug %}" class="btn btn-primary">Delete</a></td>
+			    	</tr>
+		    	{% endfor %}
+	    	</tbody>
+		</table>
 	{% endif %}
 
 {% endblock %}

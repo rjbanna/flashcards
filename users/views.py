@@ -97,7 +97,8 @@ def dashboard(request):
 		return redirect('signin')
 
 	email = request.session['email']
-	user_decks_check = Deck.objects.filter(user__email = email)
+	# user_decks_check = Deck.objects.filter(user__email = email)
+	user_decks_check = Deck.objects.filter(user = email)
 
 	is_created = 0
 	get_user_decks = []
@@ -287,9 +288,67 @@ def send_activation_mail_again(request):
 
 
 
+def deck_add(request):
+	if 'email' not in request.session:
+		return redirect('signin')
+	
+	if request.method == 'POST':
+		form = DeckAddForm(request.POST)		
+		if form.is_valid():
+			deck = form.save(commit = False)
+			deck.user = request.session['email']
+			deck.save()
+			return redirect('dashboard')
+	else:
+		form = DeckAddForm()
+
+	return render(request, template_name = 'carddecks/deck_add.html', context = {'form': form})
+
+
 def deck_detail(request, slug = True):
 	if 'email' not in request.session:
 		return redirect('signin')
 
 	deck = get_object_or_404(Deck, slug = slug)
-	return render(request, template_name = 'carddecks/deck_details.html', context = {'deck': deck})
+
+	if request.session['email'] != deck.user:
+		return redirect('dashboard')	
+
+	cards = Card.objects.filter(deck_name = deck.name, user = request.session['email'])
+	cards_count = cards.count()	
+
+	deck_cards = []
+	if cards and cards_count:
+		for card in cards:
+			temp = {}
+			temp['front'] = card.front
+			temp['back'] = card.back
+			deck_cards.append(temp)
+
+	return render(request, template_name = 'carddecks/deck_details.html', context = {'deck': deck.name, 'cards_count': cards_count, 'cards': deck_cards})
+
+
+def deck_delete(request, slug = True):
+	if 'email' not in request.session:
+		return redirect('signin')
+
+	deck = get_object_or_404(Deck, slug = slug)
+	deck.delete()
+	return redirect('dashboard')
+
+
+def card_add(request):
+	if 'email' not in request.session:
+		return redirect('signin')
+
+	if request.method == 'POST':
+		form = CardAddForm(request.POST)		
+		if form.is_valid():
+			deck = form.save(commit = False)
+			deck.user = request.session['email']
+			deck.save()
+			return redirect('dashboard')
+	else:
+		form = CardAddForm()
+
+	return render(request, template_name = 'carddecks/card_add.html', context = {'form': form})

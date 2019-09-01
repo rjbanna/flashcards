@@ -3,9 +3,24 @@
 {% load staticfiles %}
 
 {% block title %}
-	Dashboard
+	{{deck}}
 {% endblock %}
 
 {% block content %}
-	{{deck}}
+<a href="{% url 'card_add' %}" class="btn btn-primary">Add Cards</a>
+	{% if not cards_count %}
+		<p>No cards added</p>
+	{% else %}
+
+		{% for card in cards %}
+			<label>
+			    <input type="checkbox"/>
+			    <div class="card">
+			        <div class="front">{{card.front}}</div>
+			        <div class="back">{{card.back}}</div>
+			    </div>
+			</label>
+		{% endfor %}
+
+	{% endif %}	
 {% endblock %}

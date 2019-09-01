@@ -1,5 +1,6 @@
 from django import forms
 from users.models import *
+from carddecks.models import *
 
 class SignInForm(forms.ModelForm):
 	email = forms.EmailField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Email Address'} ))
@@ -33,3 +34,31 @@ class VerifyPasswordResetCode(forms.Form):
 
 class NewPassword(forms.Form):
 	password = forms.CharField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'New Password'} ))
+
+
+# class DeckAddForm(forms.Form):
+# 	name = forms.CharField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Deck Name'} ))
+# 	user = forms.CharField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Deck Name'} ))
+
+
+# 	def save(self):
+# 	    data = self.cleaned_data
+# 	    user = Deck(user = request.session['email'], name = data['name'])
+# 	    user.save()
+
+
+class DeckAddForm(forms.ModelForm):
+	name = forms.CharField(widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Deck Name'} ))
+
+	class Meta:
+		model = Deck
+		fields = ('name',)
+
+
+class CardAddForm(forms.ModelForm):
+	front = forms.CharField(widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Card Front'} ))
+	back = forms.CharField(widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Card Back'} ))
+
+	class Meta:
+		model = Card
+		fields = ('front', 'back')
