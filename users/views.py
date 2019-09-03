@@ -10,6 +10,9 @@ from django.urls import reverse
 
 from carddecks.models import *
 from django.shortcuts import get_object_or_404
+import random
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def homepage(request):
@@ -325,6 +328,8 @@ def deck_detail(request, slug = True):
 			temp['back'] = card.back
 			deck_cards.append(temp)
 
+	random.shuffle(deck_cards)
+	
 	return render(request, template_name = 'carddecks/deck_details.html', context = {'deck': deck.name, 'cards_count': cards_count, 'cards': deck_cards})
 
 

@@ -9,16 +9,26 @@
 {% block content %}
 	{% if not cards_count %}
 		<p>No cards added</p>
-	{% else %}
-
+	{% else %}	
 		{% for card in cards %}
-			<label>
-			    <input type="checkbox"/>
-			    <div class="card">
-			        <div class="front">{{card.front}}</div>
-			        <div class="back">{{card.back}}</div>
-			    </div>
-			</label>
+			{% if forloop.counter == 1 %}
+				<div class="cards card{{forloop.counter}}">
+			{% else %}
+				<div class="cards card{{forloop.counter}}" style="display: none">
+			{% endif %}
+			    	<div class="front">
+			      		<p>{{card.front}}</p>
+			    	</div>
+			    	<hr class="back{{forloop.counter}}" style="display: none">
+			    	<div class="back{{forloop.counter}}" style="display: none">
+			      		<p>{{card.back}}</p>
+			    	</div>
+			    	<button id="show-btn" onclick='buttonAction(1, {{forloop.counter}})'>Reveal</button>
+			    	<div class='card_buttons' style="display: none">
+			    		<button onclick='buttonAction(2, {{forloop.counter}})'>Again</button>
+			    		<button onclick='buttonAction(3, 0)'>Easy</button>
+					</div>
+				</div>
 		{% endfor %}
 
 	{% endif %}	
