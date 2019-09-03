@@ -31,6 +31,9 @@
               <a href="{% url 'deck_add' %}" class="nav-link" {% if request.resolver_match.url_name == 'deck_add' %} style="color: #fd5f00 !important;" {% endif %} >Add Deck</a>
             </li>
             <li class="nav-item">
+              <a href="{% url 'card_add' %}" class="nav-link" {% if request.resolver_match.url_name == 'card_add' %} style="color: #fd5f00 !important;" {% endif %} >Add Card</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{% url 'signout' %}" {% if request.resolver_match.url_name == 'signout' %} style="color: #fd5f00 !important;" {% endif %} >Logout</a>
             </li>
           {% endif %}

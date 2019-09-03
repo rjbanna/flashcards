@@ -55,10 +55,16 @@ class DeckAddForm(forms.ModelForm):
 		fields = ('name',)
 
 
-class CardAddForm(forms.ModelForm):
+class CardAddForm(forms.Form):
 	front = forms.CharField(widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Card Front'} ))
 	back = forms.CharField(widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Card Back'} ))
+	decks = forms.ModelChoiceField(queryset = Deck.objects.all().order_by('name'))
 
-	class Meta:
-		model = Card
-		fields = ('front', 'back')
+	def save(self):
+	    data = self.cleaned_data
+	    user = Card(deck_name = data['decks'], front = data['front'], back = data['back'])
+	    user.save()
+
+	# class Meta:
+	# 	model = Card
+	# 	fields = ('front', 'back', 'decks')

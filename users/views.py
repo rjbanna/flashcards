@@ -344,9 +344,16 @@ def card_add(request):
 	if request.method == 'POST':
 		form = CardAddForm(request.POST)		
 		if form.is_valid():
-			deck = form.save(commit = False)
-			deck.user = request.session['email']
-			deck.save()
+			deck_id = request.POST['decks']
+			
+			deck_name = Deck.objects.get(pk = deck_id)			
+			user = Card(user = request.session['email'], deck_name = deck_name, front = request.POST['front'], back = request.POST['back'])
+			user.save()
+			
+			# return render(request, template_name = 'carddecks/card_add.html', context = {'d': d})
+			# data = self.cleaned_data
+		 #    user = Card(deck_name = data['decks'], front = data['front'], back = data['back'])
+		 #    user.save()
 			return redirect('dashboard')
 	else:
 		form = CardAddForm()
