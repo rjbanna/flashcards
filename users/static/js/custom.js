@@ -30,27 +30,25 @@ function buttonAction(type, cardNumber){
 		$('.back'+cardNumber).show()
 		$('.card'+cardNumber).addClass('learnt')
 		$('.card_buttons').show()
-		$('#show-btn').hide()
+		$('.show-btn').hide()
 	}else if(type == 2){
 		// AGAIN BUTTON
 		$('.back'+cardNumber).hide()
 		$('.card'+cardNumber).removeClass('learnt')
 		$('.card_buttons').hide()
-		$('#show-btn').show()
+		$('.show-btn').show()
 	}else{
 		// EASY BUTTON
-		var number = Math.floor(Math.random()*3)
-		alert(number)
-		var div = $(".card"+number);
+		// DISPLAYING NEXT CARDS FROM REMAINING CARDS WHERE LEARNT CLASS IS NOT AVAILABLE
+		let unvisited = $('.cards').not('.learnt');
+		let next_card = unvisited.eq(Math.floor(Math.random(unvisited.length)));
+		next_card.show();
+
+		// TO CHECK IF IT WAS LAST CARD
+		// alert(next_card.length)
+
 		$('.learnt').hide()
-		div.show();
-
 		$('.card_buttons').hide()
-		$('#show-btn').show()
+		$('.show-btn').show()
 	}	
-}
-
-function learn_again(a){
-	$('.back'+a).hide()
-	$('.card'+a).removeClass('learnt')
 }
