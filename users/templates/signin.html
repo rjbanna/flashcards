@@ -6,6 +6,31 @@
 {% endblock %}
 
 {% block content %}
+	<div class="main">
+		{% if messages %}
+        	{% for message in messages %}
+          	<div style="background-color:#fd5f00; color:black; border-radius: 25px;">
+            	<p style="margin-left:10px;">{{ message }}</p>
+          	</div>
+        	{% endfor %}
+      	{% endif %}
+  		
+  		{% if send_mail %}
+    		<p>Didn't received activation email? <a href="{% url 'send_activation_mail_again' %}">Click here</a> to send it again</p>
+		{% endif %}
+
+	    <p class="sign" align="center">Sign in</p>
+	    <form method="post" class="form1">{% csrf_token %}
+			{{ form.email }}
+			{{ form.password }}
+			<input type="submit" class="submit" value="Sign In">
+			<p class="forgot" align="center"><a href="{% url 'resetpass' %}">Forgot Password?</p>
+		</form>
+    </div>
+{% endblock %}
+
+
+<!-- 
 <div class="site-section bg-light" id="contact-section">
     <div class="container">
       	<div class="row">
@@ -49,5 +74,4 @@
 	        </div>
 	    </div>
 	</div>
-</div>
-{% endblock %}
+</div> -->

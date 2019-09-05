@@ -3,8 +3,8 @@ from users.models import *
 from carddecks.models import *
 
 class SignInForm(forms.ModelForm):
-	email = forms.EmailField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Email Address'} ))
-	password = forms.CharField(max_length = 30, widget = forms.PasswordInput(attrs = {'class': 'form-control', 'placeholder': 'Password'} ))
+	email = forms.EmailField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'un', 'placeholder': 'Email Address'} ))
+	password = forms.CharField(max_length = 30, widget = forms.PasswordInput(attrs = {'class': 'pass', 'placeholder': 'Password'} ))
 	
 	class Meta:
 		model = User
@@ -12,8 +12,8 @@ class SignInForm(forms.ModelForm):
 
 
 class SignUpForm(forms.ModelForm):
-	email = forms.EmailField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'form-control', 'placeholder': 'Email Address'} ))
-	password = forms.CharField(max_length = 30, widget = forms.PasswordInput(attrs = {'class': 'form-control', 'placeholder': 'Password'} ))
+	email = forms.EmailField(max_length = 30, widget = forms.TextInput(attrs = {'class': 'un', 'placeholder': 'Email Address'} ))
+	password = forms.CharField(max_length = 30, widget = forms.PasswordInput(attrs = {'class': 'pass', 'placeholder': 'Password'} ))
 	
 	class Meta:
 		model = User

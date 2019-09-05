@@ -3,7 +3,46 @@
 
 <!-- MOBILE NAVBAR BUTTON STOP -->
 
-<header class="site-navbar" role="banner" style="background-color: #fff; box-shadow: 0px 3px 10px #bfbfbf;">
+
+<nav class="navbar navbar-toggleable-md navbar-light bg-white fixed-top mediumnavigation">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <img src="{% static 'img/logo.png' %}" alt="logo">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav ml-auto">
+        {% if 'email' not in request.session %}
+          <li class="nav-item">
+            <a href="{% url 'signin' %}" class="nav-link" {% if request.resolver_match.url_name == 'signin' %} style="color: #5cdb95 !important; font-weight: bold;" {% endif %} >Login</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'signup' %}" class="nav-link" {% if request.resolver_match.url_name == 'signup' %} style="color: #5cdb95 !important; font-weight: bold;" {% endif %} >Register</a>
+          </li>
+        {% endif %}
+
+        {% if 'email' in request.session %}
+          <li class="nav-item">
+            <a href="{% url 'dashboard' %}" class="nav-link" {% if request.resolver_match.url_name == 'dashboard' %} style="color: #5cdb95 !important; font-weight: bold;" {% endif %} >Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'deck_add' %}" class="nav-link" {% if request.resolver_match.url_name == 'deck_add' %} style="color: #5cdb95 !important; font-weight: bold;" {% endif %} >Add Deck</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'card_add' %}" class="nav-link" {% if request.resolver_match.url_name == 'card_add' %} style="color: #5cdb95 !important; font-weight: bold;" {% endif %} >Add Card</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'signout' %}" {% if request.resolver_match.url_name == 'signout' %} style="color: #5cdb95 !important; font-weight: bold;" {% endif %} >Logout</a>
+          </li>
+        {% endif %}        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- <header class="site-navbar" role="banner" style="background-color: #fff; box-shadow: 0px 3px 10px #bfbfbf;">
   <div class="container-fluid">
     <div class="row align-items-center position-relative">
       <div class="site-logo">
@@ -50,3 +89,4 @@
   </div>
 </header>
 </div>
+ -->

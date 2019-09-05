@@ -106,8 +106,12 @@ def dashboard(request):
 	is_created = 0
 	get_user_decks = []
 	if user_decks_check:
-		for d in user_decks_check:
-			get_user_decks.append(d)
+		for deck in user_decks_check:
+			card = Card.objects.filter(deck_name = deck).count()
+			temp = {}
+			temp['deck_name'] = deck
+			temp['card_count'] = card
+			get_user_decks.append(temp)
 
 		is_created = 1
 
