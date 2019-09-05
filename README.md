@@ -1,4 +1,4 @@
 # flashcards
 This is Flashcards app like Anki but with some more user friendliness written in Python
 
-More updates coming soon
+Screen shots coming soon
