@@ -7,8 +7,7 @@
 
 
 
-
- /*RJ*/
+/*RJ*/
 
 input.submit:hover {
     color: #000;
@@ -17,43 +16,4 @@ input.submit:hover {
 a:focus, a:hover {
     color: black !important; 
     text-decoration: none;
-}
-
-.card-body{
-	padding: 20px;
-}
-
-.learn-btn {
-  	cursor: pointer;
-	border-radius: 5em;
-	color: #fff;
-	background: #5cdb95;
-	border: 0;
-	padding-left: 40px;
-	padding-right: 40px;
-	padding-bottom: 10px;
-	padding-top: 10px;
-	font-family: 'Ubuntu', sans-serif;
-	/*margin-left: 35%;*/
-	float: left;
-	font-size: 13px;
-	box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
-}
-
-
-.delete-btn {
-  	cursor: pointer;
-	border-radius: 5em;
-	color: #fff;
-	background: #5cdb95;
-	border: 0;
-	padding-left: 40px;
-	padding-right: 40px;
-	padding-bottom: 10px;
-	padding-top: 10px;
-	font-family: 'Ubuntu', sans-serif;
-	/*margin-left: 35%;*/
-	float: right;
-	font-size: 13px;
-	box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
 }

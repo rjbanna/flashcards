@@ -14,17 +14,15 @@
 	{% if not is_created %}
 		<p>No decks added</p>
 	{% else %}
-		<div class="card-columns listfeaturedtag">
+		<div class="card-deck">
 			{% for deck in decks %}
-				<div class="card">						
-					<div class="col-md-7">
-						<div class="card-block">
-							<h2 class="card-title">{{ deck.deck_name }}</h2>
-							<h4 class="card-text">Cards: {{ deck.card_count }}</h4>
-							<a href="{% url 'deck_detail' slug=deck.deck_name.slug %}" class="btn btn-primary">Learn</a>
-		      				<a href="{% url 'deck_delete' slug=deck.deck_name.slug %}" class="btn btn-primary">Delete</a>
-						</div>
-					</div>
+				<div class="card">
+				  	<div class="card-body">
+				    	<h5 class="card-title">{{ deck.deck_name }}</h5>
+				    	<p class="card-text">Cards: {{ deck.card_count }}</p>
+					    <a href="{% url 'deck_detail' slug=deck.deck_name.slug %}" class="learn-btn">Learn</a>
+						<a href="{% url 'deck_delete' slug=deck.deck_name.slug %}" class="delete-btn">Delete</a>
+				  </div>
 				</div>
 			{% endfor %}
 		</div>
