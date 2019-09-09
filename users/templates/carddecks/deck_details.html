@@ -23,10 +23,10 @@
 			    	<div class="back{{forloop.counter}}" style="display: none">
 			      		<p>{{card.back}}</p>
 			    	</div>
-			    	<a class="show-btn btn btn-primary" onclick='buttonAction(1, {{forloop.counter}})'>Reveal</a>
+			    	<a class="show-btn learn-btn" onclick='buttonAction(1, {{forloop.counter}})'>Reveal</a>
 			    	<div class='card_buttons' style="display: none">
-			    		<a class="btn btn-primary" onclick='buttonAction(2, {{forloop.counter}})'>Again</a>
-			    		<a class="btn btn-primary" onclick='buttonAction(3, 0)'>Easy</a>
+			    		<a class="learn-btn" onclick='buttonAction(2, {{forloop.counter}})'>Again</a>
+			    		<a class="learn-btn" onclick='buttonAction(3, 0)'>Easy</a>
 					</div>
 				</div>
 		{% endfor %}

@@ -57,3 +57,10 @@ a:focus, a:hover {
 	font-size: 13px;
 	box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
 }
+
+
+
+.main-view{
+	text-align: center !important;
+	padding-top: 50px;
+}
